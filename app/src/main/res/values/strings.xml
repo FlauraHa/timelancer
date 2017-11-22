@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Time Lancer</string>
+    <string name="title_activity_main">Time Lancer</string>
+
+    <string name="menu_title_time_logs">Time Logs</string>
+    <string name="menu_title_projects">Projects</string>
+    <string name="menu_title_activities">Activities</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

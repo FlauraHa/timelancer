@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_time_logs"
+        android:orderInCategory="@integer/nav_time_log_fragment_position"
+        android:icon="@drawable/ic_time_logs_black_24dp"
+        android:title="@string/menu_title_time_logs" />
+
+    <item
+        android:id="@+id/navigation_projects"
+        android:orderInCategory="@integer/nav_projects_fragment_position"
+        android:icon="@drawable/ic_projects_black_24dp"
+        android:title="@string/menu_title_projects" />
+
+    <item
+        android:id="@+id/navigation_activities"
+        android:orderInCategory="@integer/nav_activities_fragment_position"
+        android:icon="@drawable/ic_activities_black_24dp"
+        android:title="@string/menu_title_activities" />
+
+</menu>
