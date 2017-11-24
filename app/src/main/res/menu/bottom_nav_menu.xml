@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/navigation_time_logs"
-        android:orderInCategory="@integer/nav_time_log_fragment_position"
+        android:orderInCategory="@integer/nav_time_logs_fragment_position"
         android:icon="@drawable/ic_time_logs_black_24dp"
         android:title="@string/menu_title_time_logs" />
 

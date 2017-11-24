@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <integer name="nav_time_log_fragment_position">0</integer>
+    <integer name="nav_time_logs_fragment_position">0</integer>
     <integer name="nav_projects_fragment_position">1</integer>
     <integer name="nav_activities_fragment_position">2</integer>
 </resources>

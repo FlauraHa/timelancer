@@ -1,92 +1,134 @@
 package ro.handrea.timelancer.views.fragments;
 
-import android.content.Context;
-import android.net.Uri;
+import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
+
+import java.util.Calendar;
 
 import ro.handrea.timelancer.R;
+import ro.handrea.timelancer.ViewScrollListener;
+import ro.handrea.timelancer.views.MainActivity;
+import ro.handrea.timelancer.views.TimeLogsAdapter;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link TimeLogsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link TimeLogsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TimeLogsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    public static final String STARTING_DATE_BUNDLE_KEY = "startingDateBundleKey";
+    private static final String TAG = TimeLogsFragment.class.getSimpleName();
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
+    private Calendar mCalendar;
+    private DatePickerDialog mDatePickerDialog;
 
     public TimeLogsFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TimeLogsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TimeLogsFragment newInstance(String param1, String param2) {
-        TimeLogsFragment fragment = new TimeLogsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        long startingDateMillis = getArguments().getLong(STARTING_DATE_BUNDLE_KEY);
+        mCalendar = Calendar.getInstance();
+        mCalendar.setTimeInMillis(startingDateMillis);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_time_logs, container, false);
+        View view = inflater.inflate(R.layout.fragment_time_logs, container, false);
+        initRecyclerView(view);
+
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    private void initRecyclerView(View view) {
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerview_time_logs);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        TimeLogsAdapter timeLogsAdapter = new TimeLogsAdapter();
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(timeLogsAdapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                // No operation
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                Activity activity = getActivity();
+
+                if (activity instanceof ViewScrollListener) {
+                    MainActivity mainActivity = (MainActivity) activity;
+
+                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                        mainActivity.onViewScrolled();
+                    } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        mainActivity.onViewScrollStateIdle();
+                    }
+                }
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.action_bar_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_date){
+            showDatePickerDialog();
+            return true;
         }
+
+        return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    private void showDatePickerDialog() {
+        if (mDatePickerDialog == null) {
+            mDatePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    // TODO: Filter the time logs by the selected date
+
+                    // We tell the parent activity that we have a new date in order to update the toolbar subtitle
+                    FragmentActivity activity = getActivity();
+                    if (activity instanceof DatePickerDialog.OnDateSetListener) {
+                        ((DatePickerDialog.OnDateSetListener) activity).onDateSet(view, year, month, dayOfMonth);
+                    }
+                }
+            }, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                    mCalendar.get(Calendar.DAY_OF_MONTH));
+        }
+        mDatePickerDialog.show();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (mDatePickerDialog != null && mDatePickerDialog.isShowing()) {
+            mDatePickerDialog.dismiss();
+        }
     }
 }
