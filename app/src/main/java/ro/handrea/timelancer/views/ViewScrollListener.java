@@ -1,4 +1,4 @@
-package ro.handrea.timelancer;
+package ro.handrea.timelancer.views;
 
 /**
  * Created on 11/23/17.

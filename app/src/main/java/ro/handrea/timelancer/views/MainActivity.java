@@ -1,6 +1,5 @@
 package ro.handrea.timelancer.views;
 
-import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -12,7 +11,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.DatePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,11 +18,10 @@ import java.util.Date;
 import java.util.Locale;
 
 import ro.handrea.timelancer.R;
-import ro.handrea.timelancer.ViewScrollListener;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener,
         BottomNavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
-        ViewScrollListener, DatePickerDialog.OnDateSetListener {
+        ViewScrollListener, DateSetListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String SELECTED_DATE_PREFS_KEY = "selectedDate";
 
@@ -110,10 +107,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     // This method is called from a child fragment
     @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, dayOfMonth);
-        Date date = calendar.getTime();
+    public void onDateSet(Date date) {
         setDateSubtitle(date);
         saveDateToPrefs(date);
     }
