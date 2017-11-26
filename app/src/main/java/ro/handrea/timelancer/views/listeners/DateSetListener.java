@@ -1,4 +1,4 @@
-package ro.handrea.timelancer.views;
+package ro.handrea.timelancer.views.listeners;
 
 import java.util.Date;
 

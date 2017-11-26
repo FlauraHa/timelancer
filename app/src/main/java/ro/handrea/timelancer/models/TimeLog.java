@@ -12,59 +12,42 @@ import java.util.Date;
 
 @Entity
 public class TimeLog {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    private int mId;
+    private int id;
+    private Date date;
+    private int projectId;
+    private int activityId;
+    private int workTimeId;
 
-    @ColumnInfo(name = "date")
-    private Date mDate;
-
-    @ColumnInfo(name = "project_id")
-    private int mProjectId;
-
-    @ColumnInfo(name = "activity_id")
-    private int mActivityId;
-
-    @ColumnInfo(name = "work_time_id")
-    private int mWorkTimeId;
-
-    public int getId() {
-        return mId;
+    public TimeLog(Date date, int projectId, int activityId, int workTimeId) {
+        this.date = date;
+        this.projectId = projectId;
+        this.activityId = activityId;
+        this.workTimeId = workTimeId;
     }
 
     public void setId(int id) {
-        this.mId = id;
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Date getDate() {
-        return mDate;
-    }
-
-    public void setDate(Date date) {
-        this.mDate = date;
+        return date;
     }
 
     public int getProjectId() {
-        return mProjectId;
-    }
-
-    public void setProjectId(int projectId) {
-        this.mProjectId = projectId;
+        return projectId;
     }
 
     public int getActivityId() {
-        return mActivityId;
-    }
-
-    public void setActivityId(int activityId) {
-        this.mActivityId = activityId;
+        return activityId;
     }
 
     public int getWorkTimeId() {
-        return mWorkTimeId;
-    }
-
-    public void setWorkTimeId(int workTimeId) {
-        this.mWorkTimeId = workTimeId;
+        return workTimeId;
     }
 }

@@ -8,4 +8,15 @@
     <string name="menu_title_date">Date</string>
 
     <string name="date_format">EEE, d MMM yyyy</string>
+    <string name="edit_text_hint_name">Name</string>
+    <string name="dialog_title_new_project">New Project</string>
+
+    <string name="button_label_ok">OK</string>
+    <string name="button_label_cancel">CANCEL</string>
+
+    <string name="dialog_error_message_invalid">Invalid</string>
+    <string name="dialog_title_new_activity">New Activity</string>
+
+    <string name="toast_message_project_created">Project Created</string>
+    <string name="toast_message_activity_created">Activity Created</string>
 </resources>

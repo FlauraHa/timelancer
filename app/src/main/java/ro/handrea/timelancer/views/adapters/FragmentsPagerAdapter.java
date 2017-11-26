@@ -1,4 +1,4 @@
-package ro.handrea.timelancer.views;
+package ro.handrea.timelancer.views.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -15,12 +15,12 @@ import ro.handrea.timelancer.views.fragments.ActivitiesFragment;
 import ro.handrea.timelancer.views.fragments.ProjectsFragment;
 import ro.handrea.timelancer.views.fragments.TimeLogsFragment;
 
-class FragmentsPagerAdapter extends FragmentPagerAdapter {
+public class FragmentsPagerAdapter extends FragmentPagerAdapter {
 
     private SparseArray<Fragment> mFragments;
 
-    FragmentsPagerAdapter(Context context, FragmentManager fragmentManager,
-                          Date startingDate) {
+    public FragmentsPagerAdapter(Context context, FragmentManager fragmentManager,
+                                 Date startingDate) {
         super(fragmentManager);
         setupFragments(context, startingDate);
     }

@@ -4,6 +4,8 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
+import java.util.List;
+
 import ro.handrea.timelancer.models.Project;
 
 /**
@@ -17,4 +19,7 @@ public interface ProjectDao {
 
     @Query("SELECT * FROM project WHERE id = :projectId")
     Project findById(int projectId);
+
+    @Query("SELECT * FROM project")
+    List<Project> loadAllProjects();
 }

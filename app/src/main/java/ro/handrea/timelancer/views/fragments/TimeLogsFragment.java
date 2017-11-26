@@ -30,11 +30,11 @@ import ro.handrea.timelancer.ThreadPerTaskExecutor;
 import ro.handrea.timelancer.database.AppDatabase;
 import ro.handrea.timelancer.R;
 import ro.handrea.timelancer.models.TimeLog;
-import ro.handrea.timelancer.views.DateSetListener;
-import ro.handrea.timelancer.views.ViewScrollListener;
+import ro.handrea.timelancer.views.listeners.DateSetListener;
+import ro.handrea.timelancer.views.listeners.ViewScrollListener;
 import ro.handrea.timelancer.viewmodels.TimeLogsViewModel;
-import ro.handrea.timelancer.views.MainActivity;
-import ro.handrea.timelancer.views.TimeLogsAdapter;
+import ro.handrea.timelancer.views.activities.MainActivity;
+import ro.handrea.timelancer.views.adapters.TimeLogsAdapter;
 
 public class TimeLogsFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
     public static final String STARTING_DATE_BUNDLE_KEY = "startingDateBundleKey";
@@ -47,6 +47,22 @@ public class TimeLogsFragment extends Fragment implements DatePickerDialog.OnDat
 
     public TimeLogsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_time_logs, container, false);
+        initRecyclerView(view);
+
+        return view;
     }
 
     @Override
@@ -69,22 +85,6 @@ public class TimeLogsFragment extends Fragment implements DatePickerDialog.OnDat
         mCurrentSelectedDate.setTimeInMillis(startingDateMillis);
         mTimeLogsAdapter = new TimeLogsAdapter();
         updateAdapter(mCurrentSelectedDate.getTime());
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_time_logs, container, false);
-        initRecyclerView(view);
-
-        return view;
     }
 
     private void initRecyclerView(View view) {

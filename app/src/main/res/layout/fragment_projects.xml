@@ -4,4 +4,12 @@
     android:layout_height="match_parent"
     tools:context="ro.handrea.timelancer.views.fragments.ProjectsFragment">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_projects"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="2dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp" />
+
 </FrameLayout>

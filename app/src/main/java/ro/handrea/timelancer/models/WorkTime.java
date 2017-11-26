@@ -1,6 +1,5 @@
 package ro.handrea.timelancer.models;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -12,37 +11,35 @@ import java.util.Locale;
 
 @Entity
 public class WorkTime {
-    @PrimaryKey
-    @ColumnInfo(name = "id")
-    private int mId;
-
-    @ColumnInfo(name = "hours")
-    private int mHours;
-
-    @ColumnInfo(name = "minutes")
-    private int mMinutes;
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    private int hours;
+    private int minutes;
 
     public WorkTime(int hours, int minutes) {
-        this.mHours = hours;
-        this.mMinutes = minutes;
+        this.hours = hours;
+        this.minutes = minutes;
         // TODO: Manage over 60 minutes case
+    }
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getId() {
-        return mId;
+        return id;
     }
 
     public int getHours() {
-        return mHours;
+        return hours;
     }
 
     public int getMinutes() {
-        return mMinutes;
+        return minutes;
     }
 
     @Override
     public String toString() {
-        return String.format(Locale.getDefault(), "%02d:%02d", mHours, mMinutes);
+        return String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
     }
 
     @Override
@@ -50,7 +47,7 @@ public class WorkTime {
         if (target != null && target instanceof WorkTime) {
             WorkTime targetWorkHours = (WorkTime) target;
 
-            return targetWorkHours.getHours() == mHours && targetWorkHours.getMinutes() == mMinutes;
+            return targetWorkHours.getHours() == hours && targetWorkHours.getMinutes() == minutes;
         }
 
         return false;

@@ -1,4 +1,4 @@
-package ro.handrea.timelancer.views;
+package ro.handrea.timelancer.views.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -51,16 +51,16 @@ public class TimeLogsAdapter extends RecyclerView.Adapter<TimeLogsAdapter.TimeLo
     public class TimeLogsAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private Context mContext;
 
-        private TextView mProjectImageView;
-        private TextView mActivityImageView;
-        private TextView mHoursImageView;
+        private TextView mProjectTextView;
+        private TextView mActivityTextView;
+        private TextView mHoursTextView;
 
         public TimeLogsAdapterViewHolder(View itemView) {
             super(itemView);
             mContext = itemView.getContext();
-            mProjectImageView = (TextView) itemView.findViewById(R.id.text_view_project);
-            mActivityImageView = (TextView) itemView.findViewById(R.id.text_view_activity);
-            mHoursImageView = (TextView) itemView.findViewById(R.id.text_view_hours);
+            mProjectTextView = itemView.findViewById(R.id.text_view_project);
+            mActivityTextView = itemView.findViewById(R.id.text_view_activity);
+            mHoursTextView = itemView.findViewById(R.id.text_view_hours);
             itemView.setOnClickListener(this);
         }
 
@@ -75,9 +75,9 @@ public class TimeLogsAdapter extends RecyclerView.Adapter<TimeLogsAdapter.TimeLo
             Activity activity = db.activityDao().findById(timeLog.getActivityId());
             WorkTime workHours = db.workTimeDao().findById(timeLog.getWorkTimeId());
 
-            mProjectImageView.setText(project.getName());
-            mActivityImageView.setText(activity.getName());
-            mHoursImageView.setText(workHours.toString());
+            mProjectTextView.setText(project.getName());
+            mActivityTextView.setText(activity.getName());
+            mHoursTextView.setText(workHours.toString());
         }
 
     }

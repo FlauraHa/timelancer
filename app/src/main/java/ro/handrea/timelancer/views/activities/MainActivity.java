@@ -1,4 +1,4 @@
-package ro.handrea.timelancer.views;
+package ro.handrea.timelancer.views.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,13 +18,19 @@ import java.util.Date;
 import java.util.Locale;
 
 import ro.handrea.timelancer.R;
+import ro.handrea.timelancer.views.adapters.FragmentsPagerAdapter;
+import ro.handrea.timelancer.views.fragments.FabAwareFragment;
+import ro.handrea.timelancer.views.listeners.DateSetListener;
+import ro.handrea.timelancer.views.listeners.ViewScrollListener;
 
+@SuppressWarnings("unchecked")
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener,
         BottomNavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
         ViewScrollListener, DateSetListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String SELECTED_DATE_PREFS_KEY = "selectedDate";
 
+    private int mCurrentFragmentPosition;
     private ViewPager mViewPager;
     private BottomNavigationView mNavigation;
     private FloatingActionButton mAddFab;
@@ -59,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void onFragmentChanged(int newFragmentPosition) {
+        mCurrentFragmentPosition = newFragmentPosition;
         // Checking if we are moving to a different fragment than TimeLogs
         if (newFragmentPosition != getResources().getInteger(R.integer.nav_time_logs_fragment_position)) {
             removeDateSubtitle();
@@ -84,9 +91,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         // No operation
     }
 
+    // This is called when the mAddFab was clicked
     @Override
     public void onClick(View v) {
-        // TODO: implement this:onFABClicked
+        FragmentsPagerAdapter adapter = (FragmentsPagerAdapter) mViewPager.getAdapter();
+        FabAwareFragment fragment = (FabAwareFragment) adapter.getItem(mCurrentFragmentPosition);
+        fragment.onFabClick();
     }
 
     // This method is called from a child fragment

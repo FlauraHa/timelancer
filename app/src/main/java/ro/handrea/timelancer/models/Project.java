@@ -1,6 +1,5 @@
 package ro.handrea.timelancer.models;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -10,26 +9,23 @@ import android.arch.persistence.room.PrimaryKey;
 
 @Entity
 public class Project {
-    @PrimaryKey
-    @ColumnInfo(name = "id")
-    private int mId;
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    private String name;
 
-    @ColumnInfo(name = "name")
-    private String mName;
-
-    public int getId() {
-        return mId;
+    public Project(String name) {
+        this.name = name;
     }
 
     public void setId(int id) {
-        this.mId = id;
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {
-        return mName;
-    }
-
-    public void setName(String name) {
-        this.mName = name;
+        return name;
     }
 }
