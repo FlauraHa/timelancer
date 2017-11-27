@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <NumberPicker
+        android:layout_height="wrap_content"
+        android:id="@+id/hourPicker"
+        android:layout_marginTop="16dp"
+        android:descendantFocusability="blocksDescendants"
+        android:scaleX="1.2"
+        android:scaleY="1.2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/guideline"
+        app:layout_constraintHorizontal_bias="0.92" />
+
+    <NumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/minutePicker"
+        android:layout_marginEnd="16dp"
+        android:descendantFocusability="blocksDescendants"
+        android:scaleX="1.2"
+        android:scaleY="1.2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/hourPicker"
+        app:layout_constraintBottom_toBottomOf="@+id/hourPicker"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.08" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="193dp"
+        app:layout_constraintGuide_percent="0.5026042" />
+
+    <TextView
+        android:text=":"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dotsTimeDivider"
+        app:layout_constraintRight_toLeftOf="@+id/minutePicker"
+        app:layout_constraintLeft_toRightOf="@+id/hourPicker"
+        app:layout_constraintBottom_toBottomOf="@+id/hourPicker"
+        app:layout_constraintTop_toTopOf="@+id/hourPicker" />
+
+</android.support.constraint.ConstraintLayout>

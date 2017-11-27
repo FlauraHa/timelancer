@@ -5,6 +5,8 @@ import android.arch.persistence.room.PrimaryKey;
 
 import java.util.Locale;
 
+import ro.handrea.timelancer.database.AppDatabase;
+
 /**
  * Created on 11/25/17.
  */
@@ -12,7 +14,7 @@ import java.util.Locale;
 @Entity
 public class WorkTime {
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private long id;
     private int hours;
     private int minutes;
 
@@ -21,11 +23,16 @@ public class WorkTime {
         this.minutes = minutes;
         // TODO: Manage over 60 minutes case
     }
-    public void setId(int id) {
+
+    public static WorkTime getFor(AppDatabase db, TimeLog timeLog) {
+        return db.workTimeDao().getEntryFor(timeLog);
+    }
+
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

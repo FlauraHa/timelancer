@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ro.handrea.timelancer.views.activities.NewTimeEntryActivity">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_layout_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <EditText
+            android:id="@+id/edit_text_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/edit_text_hint_date" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <fr.ganfra.materialspinner.MaterialSpinner
+        android:id="@+id/spinner_project"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_date"
+        app:layout_constraintVertical_bias="0.0"
+        app:ms_alignLabels="false"
+        app:ms_arrowColor="@color/colorPrimaryDark"
+        app:ms_arrowSize="16dp"
+        app:ms_baseColor="@color/colorPrimary"
+        app:ms_enableErrorLabel="false"
+        app:ms_enableFloatingLabel="true"
+        app:ms_errorColor="@color/colorError"
+        app:ms_floatingLabelColor="@color/colorAccent"
+        app:ms_floatingLabelText="@string/spinner_label_project"
+        app:ms_highlightColor="@color/colorAccent"
+        app:ms_hint="@string/spinner_label_project"
+        app:ms_hintColor="@color/colorPrimary"
+        app:ms_multiline="false"
+        app:ms_thickness="1dp" />
+
+    <fr.ganfra.materialspinner.MaterialSpinner
+        android:id="@+id/spinner_activity"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_project"
+        app:layout_constraintVertical_bias="0.0"
+        app:ms_alignLabels="false"
+        app:ms_arrowColor="@color/colorPrimaryDark"
+        app:ms_arrowSize="16dp"
+        app:ms_baseColor="@color/colorPrimary"
+        app:ms_enableErrorLabel="false"
+        app:ms_enableFloatingLabel="true"
+        app:ms_errorColor="@color/colorError"
+        app:ms_floatingLabelColor="@color/colorAccent"
+        app:ms_floatingLabelText="@string/spinner_label_activity"
+        app:ms_highlightColor="@color/colorAccent"
+        app:ms_hint="@string/spinner_label_activity"
+        app:ms_hintColor="@color/colorPrimary"
+        app:ms_multiline="false"
+        app:ms_thickness="1dp" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_layout_hours"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_activity"
+        app:layout_constraintVertical_bias="0.0">
+
+        <EditText
+            android:id="@+id/edit_text_hours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/edit_text_hint_hours" />
+
+    </android.support.design.widget.TextInputLayout>
+
+</android.support.constraint.ConstraintLayout>

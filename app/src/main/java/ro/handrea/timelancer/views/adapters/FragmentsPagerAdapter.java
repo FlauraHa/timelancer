@@ -43,7 +43,7 @@ public class FragmentsPagerAdapter extends FragmentPagerAdapter {
 
         TimeLogsFragment timeLogsFragment = new TimeLogsFragment();
         Bundle args = new Bundle();
-        args.putLong(TimeLogsFragment.STARTING_DATE_BUNDLE_KEY, startingDate.getTime());
+        args.putLong(TimeLogsFragment.STARTING_DATE_KEY, startingDate.getTime());
         timeLogsFragment.setArguments(args);
 
         mFragments = new SparseArray<>();

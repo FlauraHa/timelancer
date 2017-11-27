@@ -1,6 +1,7 @@
 package ro.handrea.timelancer.views.adapters;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import ro.handrea.timelancer.R;
 import ro.handrea.timelancer.database.AppDatabase;
@@ -24,6 +26,11 @@ public class TimeLogsAdapter extends RecyclerView.Adapter<TimeLogsAdapter.TimeLo
     private static final String TAG = TimeLogsAdapter.class.getSimpleName();
 
     private List<TimeLog> mTimeLogs;
+    private Executor mExecutor;
+
+    public TimeLogsAdapter(Executor executor) {
+        this.mExecutor = executor;
+    }
 
     public void setData(List<TimeLog> data) {
         this.mTimeLogs = data;
@@ -35,7 +42,7 @@ public class TimeLogsAdapter extends RecyclerView.Adapter<TimeLogsAdapter.TimeLo
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.list_item_time_logs, parent, false);
 
-        return new TimeLogsAdapterViewHolder(view);
+        return new TimeLogsAdapterViewHolder(mExecutor, view);
     }
 
     @Override
@@ -50,14 +57,16 @@ public class TimeLogsAdapter extends RecyclerView.Adapter<TimeLogsAdapter.TimeLo
 
     public class TimeLogsAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private Context mContext;
+        private Executor mExecutor;
 
         private TextView mProjectTextView;
         private TextView mActivityTextView;
         private TextView mHoursTextView;
 
-        public TimeLogsAdapterViewHolder(View itemView) {
+        public TimeLogsAdapterViewHolder(Executor executor, View itemView) {
             super(itemView);
             mContext = itemView.getContext();
+            mExecutor = executor;
             mProjectTextView = itemView.findViewById(R.id.text_view_project);
             mActivityTextView = itemView.findViewById(R.id.text_view_activity);
             mHoursTextView = itemView.findViewById(R.id.text_view_hours);
@@ -71,13 +80,18 @@ public class TimeLogsAdapter extends RecyclerView.Adapter<TimeLogsAdapter.TimeLo
 
         public void load(TimeLog timeLog) {
             AppDatabase db = AppDatabase.getInstance(mContext);
-            Project project = db.projectDao().findById(timeLog.getProjectId());
-            Activity activity = db.activityDao().findById(timeLog.getActivityId());
-            WorkTime workHours = db.workTimeDao().findById(timeLog.getWorkTimeId());
+            mExecutor.execute(() -> {
+                Handler mainHandler = new Handler(mContext.getMainLooper());
+                Project project = Project.getFor(db, timeLog);
+                Activity activity = Activity.getFor(db, timeLog);
+                WorkTime workHours = WorkTime.getFor(db, timeLog);
 
-            mProjectTextView.setText(project.getName());
-            mActivityTextView.setText(activity.getName());
-            mHoursTextView.setText(workHours.toString());
+                mainHandler.post(() -> {
+                    mProjectTextView.setText(project.getName());
+                    mActivityTextView.setText(activity.getName());
+                    mHoursTextView.setText(workHours.toString());
+                });
+            });
         }
 
     }

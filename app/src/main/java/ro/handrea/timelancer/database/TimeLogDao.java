@@ -15,8 +15,8 @@ import ro.handrea.timelancer.models.TimeLog;
 
 @Dao
 public interface TimeLogDao {
-    @Query("SELECT * FROM timelog WHERE date = :date")
-    List<TimeLog> findByDate(Date date);
+    @Query("SELECT * FROM timelog WHERE date BETWEEN :dateStart and :dateEnd")
+    List<TimeLog> findByDate(Date dateStart, Date dateEnd);
 
     @Insert
     void insert(TimeLog timeLog);

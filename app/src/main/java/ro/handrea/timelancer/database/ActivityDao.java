@@ -7,6 +7,7 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 import ro.handrea.timelancer.models.Activity;
+import ro.handrea.timelancer.models.TimeLog;
 
 /**
  * Created on 11/24/17.
@@ -14,12 +15,15 @@ import ro.handrea.timelancer.models.Activity;
 
 @Dao
 public interface ActivityDao {
-    @Insert
-    void insert(Activity activity);
-
     @Query("SELECT * FROM activity WHERE id = :activityId")
-    Activity findById(int activityId);
+    Activity findById(long activityId);
 
     @Query("SELECT * FROM activity")
     List<Activity> loadAllActivities();
+
+    @Query("SELECT * FROM activity, timelog where timelog.activityId = activity.id and timelog.id = :timeLog")
+    Activity getEntryFor(TimeLog timeLog);
+
+    @Insert
+    void insert(Activity activity);
 }

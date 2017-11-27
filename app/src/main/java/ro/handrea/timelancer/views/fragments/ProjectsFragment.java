@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,25 +49,6 @@ public class ProjectsFragment extends FabAwareFragment implements ProjectCreated
         return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this, new ViewModelProvider.Factory() {
-            @SuppressWarnings("unchecked")
-            @NonNull
-            @Override
-            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                if (modelClass.equals(ProjectsViewModel.class)) {
-                    return (T) new ProjectsViewModel(AppDatabase.getInstance(getContext()),
-                            new ThreadPerTaskExecutor());
-                }
-                // Needed for NonNull annotation
-                return (T) new Object();
-            }
-        }).get(ProjectsViewModel.class);
-        setAdaptersData();
-    }
-
     private void initRecyclerView(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview_projects);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -101,12 +81,30 @@ public class ProjectsFragment extends FabAwareFragment implements ProjectCreated
         });
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mViewModel = ViewModelProviders.of(this, new ViewModelProvider.Factory() {
+            @SuppressWarnings("unchecked")
+            @NonNull
+            @Override
+            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+                if (modelClass.equals(ProjectsViewModel.class)) {
+                    return (T) new ProjectsViewModel(AppDatabase.getInstance(getContext()),
+                            new ThreadPerTaskExecutor());
+                }
+                // Needed for NonNull annotation
+                return (T) new Object();
+            }
+        }).get(ProjectsViewModel.class);
+        setAdaptersData();
+    }
+
     private void setAdaptersData() {
         LiveData<List<Project>> projects = mViewModel.getProjects();
         projects.observe(ProjectsFragment.this, new Observer<List<Project>>() {
             @Override
             public void onChanged(@Nullable List<Project> projects) {
-                Log.d(TAG, "projects from db are here");
                 mProjectsAdapter.setData(projects);
             }
         });

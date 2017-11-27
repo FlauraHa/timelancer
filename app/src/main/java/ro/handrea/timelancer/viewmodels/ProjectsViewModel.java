@@ -39,11 +39,6 @@ public class ProjectsViewModel extends ViewModel {
 
     public void addProject(final Project project) {
         mProjects.getValue().add(project);
-        mExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                mDatabase.projectDao().insert(project);
-            }
-        });
+        mExecutor.execute(() -> mDatabase.projectDao().insert(project));
     }
 }

@@ -2,16 +2,15 @@ package ro.handrea.timelancer.views.fragments;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.SupportActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,20 +23,22 @@ import android.widget.DatePicker;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.concurrent.Executor;
 
 import ro.handrea.timelancer.ThreadPerTaskExecutor;
 import ro.handrea.timelancer.database.AppDatabase;
 import ro.handrea.timelancer.R;
 import ro.handrea.timelancer.models.TimeLog;
+import ro.handrea.timelancer.views.activities.NewTimeEntryActivity;
 import ro.handrea.timelancer.views.listeners.DateSetListener;
 import ro.handrea.timelancer.views.listeners.ViewScrollListener;
 import ro.handrea.timelancer.viewmodels.TimeLogsViewModel;
 import ro.handrea.timelancer.views.activities.MainActivity;
 import ro.handrea.timelancer.views.adapters.TimeLogsAdapter;
 
-public class TimeLogsFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
-    public static final String STARTING_DATE_BUNDLE_KEY = "startingDateBundleKey";
+public class TimeLogsFragment extends FabAwareFragment implements DatePickerDialog.OnDateSetListener {
+    public static final int NEW_TIME_LOG_REQUEST_CODE = 16;
+    public static final String STARTING_DATE_KEY = "startingDateBundleKey";
     private static final String TAG = TimeLogsFragment.class.getSimpleName();
 
     private Calendar mCurrentSelectedDate;
@@ -65,31 +66,11 @@ public class TimeLogsFragment extends Fragment implements DatePickerDialog.OnDat
         return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this, new ViewModelProvider.Factory() {
-            @NonNull
-            @Override
-            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                if (modelClass.equals(TimeLogsViewModel.class)) {
-                    return (T) new TimeLogsViewModel(AppDatabase.getInstance(getContext()),
-                            new ThreadPerTaskExecutor());
-                }
-                // Needed for NonNull annotation
-                return (T) new Object();
-            }
-        }).get(TimeLogsViewModel.class);
-        long startingDateMillis = getArguments().getLong(STARTING_DATE_BUNDLE_KEY);
-        mCurrentSelectedDate = Calendar.getInstance();
-        mCurrentSelectedDate.setTimeInMillis(startingDateMillis);
-        mTimeLogsAdapter = new TimeLogsAdapter();
-        updateAdapter(mCurrentSelectedDate.getTime());
-    }
-
     private void initRecyclerView(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview_time_logs);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        Executor executor = new ThreadPerTaskExecutor();
+        mTimeLogsAdapter = new TimeLogsAdapter(executor);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mTimeLogsAdapter);
@@ -119,8 +100,32 @@ public class TimeLogsFragment extends Fragment implements DatePickerDialog.OnDat
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mViewModel = ViewModelProviders.of(this, new ViewModelProvider.Factory() {
+            @SuppressWarnings("unchecked")
+            @NonNull
+            @Override
+            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+                if (modelClass.equals(TimeLogsViewModel.class)) {
+                    return (T) new TimeLogsViewModel(AppDatabase.getInstance(getContext()),
+                            new ThreadPerTaskExecutor());
+                }
+                // Needed for NonNull annotation
+                return (T) new Object();
+            }
+        }).get(TimeLogsViewModel.class);
+        long startingDateMillis = getArguments().getLong(STARTING_DATE_KEY);
+        mCurrentSelectedDate = Calendar.getInstance();
+        mCurrentSelectedDate.setTimeInMillis(startingDateMillis);
+
+        mViewModel.filterTimeLogsBy(mCurrentSelectedDate.getTime()).observe(
+                TimeLogsFragment.this, timeLogs -> mTimeLogsAdapter.setData(timeLogs));
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.action_bar_menu, menu);
+        inflater.inflate(R.menu.menu_main_action_bar, menu);
     }
 
     @Override
@@ -147,7 +152,8 @@ public class TimeLogsFragment extends Fragment implements DatePickerDialog.OnDat
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         mCurrentSelectedDate.set(year, month, dayOfMonth);
         Date date = mCurrentSelectedDate.getTime();
-        updateAdapter(date);
+        // This will trigger an update of the adapter
+        mViewModel.filterTimeLogsBy(date);
 
         // We tell the parent activity that we have a new date in order to update the toolbar subtitle
         FragmentActivity activity = getActivity();
@@ -157,14 +163,20 @@ public class TimeLogsFragment extends Fragment implements DatePickerDialog.OnDat
         }
     }
 
-    private void updateAdapter(Date date) {
-        LiveData<List<TimeLog>> timeLogs = mViewModel.getTimeLogsFor(date);
-        timeLogs.observe(TimeLogsFragment.this, new Observer<List<TimeLog>>() {
-            @Override
-            public void onChanged(@Nullable List<TimeLog> timeLogs) {
-                mTimeLogsAdapter.setData(timeLogs);
-            }
-        });
+    @Override
+    public void onFabClick() {
+        NewTimeEntryActivity.startForResult(this, NEW_TIME_LOG_REQUEST_CODE, mCurrentSelectedDate.getTimeInMillis());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == NEW_TIME_LOG_REQUEST_CODE && resultCode == SupportActivity.RESULT_OK) {
+            TimeLog timeLog = data.getParcelableExtra(NewTimeEntryActivity.TIME_LOG_ENTRY);
+
+            mViewModel.addTimeLog(timeLog);
+        }
     }
 
     @Override
