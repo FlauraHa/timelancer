@@ -19,5 +19,5 @@ public interface TimeLogDao {
     List<TimeLog> findByDate(Date dateStart, Date dateEnd);
 
     @Insert
-    void insert(TimeLog timeLog);
+    long insert(TimeLog timeLog);
 }

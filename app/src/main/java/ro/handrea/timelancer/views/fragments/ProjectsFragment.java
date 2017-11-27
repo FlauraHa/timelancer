@@ -102,12 +102,7 @@ public class ProjectsFragment extends FabAwareFragment implements ProjectCreated
 
     private void setAdaptersData() {
         LiveData<List<Project>> projects = mViewModel.getProjects();
-        projects.observe(ProjectsFragment.this, new Observer<List<Project>>() {
-            @Override
-            public void onChanged(@Nullable List<Project> projects) {
-                mProjectsAdapter.setData(projects);
-            }
-        });
+        projects.observe(ProjectsFragment.this, projects1 -> mProjectsAdapter.setData(projects1));
     }
 
     @Override

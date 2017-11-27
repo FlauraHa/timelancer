@@ -17,7 +17,7 @@ import ro.handrea.timelancer.models.TimeLog;
 @Dao
 public interface ProjectDao {
     @Insert
-    void insert(Project project);
+    long insert(Project project);
 
     @Query("SELECT * FROM project WHERE id = :projectId")
     Project findById(long projectId);

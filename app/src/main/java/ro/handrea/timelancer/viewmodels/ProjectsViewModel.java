@@ -27,18 +27,19 @@ public class ProjectsViewModel extends ViewModel {
     public LiveData<List<Project>> getProjects() {
         if (mProjects == null) {
             mProjects = new MutableLiveData<>();
-            mExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    mProjects.postValue(mDatabase.projectDao().loadAllProjects());
-                }
-            });
+            mExecutor.execute(() -> mProjects.postValue(mDatabase.projectDao().loadAllProjects()));
         }
         return mProjects;
     }
 
     public void addProject(final Project project) {
-        mProjects.getValue().add(project);
-        mExecutor.execute(() -> mDatabase.projectDao().insert(project));
+        mExecutor.execute(() -> {
+            List<Project> projects = mProjects.getValue();
+            long projectIt = mDatabase.projectDao().insert(project);
+
+            project.setId(projectIt);
+            projects.add(project);
+            mProjects.postValue(projects);
+        });
     }
 }

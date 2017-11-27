@@ -27,23 +27,19 @@ public class ActivitiesViewModel extends ViewModel {
     public LiveData<List<Activity>> getActivities() {
         if (mActivities == null) {
             mActivities = new MutableLiveData<>();
-            mExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    mActivities.postValue(mDatabase.activityDao().loadAllActivities());
-                }
-            });
+            mExecutor.execute(() -> mActivities.postValue(mDatabase.activityDao().loadAllActivities()));
         }
         return mActivities;
     }
 
     public void addActivity(final Activity activity) {
-        mActivities.getValue().add(activity);
-        mExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                mDatabase.activityDao().insert(activity);
-            }
+        mExecutor.execute(() -> {
+            List<Activity> activities = mActivities.getValue();
+            long activityId = mDatabase.activityDao().insert(activity);
+
+            activity.setId(activityId);
+            activities.add(activity);
+            mActivities.postValue(activities);
         });
     }
 }

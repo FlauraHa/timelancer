@@ -29,8 +29,14 @@ public class TimeLogsViewModel extends ViewModel {
     }
 
     public void addTimeLog(TimeLog timeLog) {
-        mTimeLogs.getValue().add(timeLog);
-        mExecutor.execute(() -> mDatabase.timeLogDao().insert(timeLog));
+        List<TimeLog> timeLogs = mTimeLogs.getValue();
+
+        mExecutor.execute(() -> {
+            long timeLogId = mDatabase.timeLogDao().insert(timeLog);
+            timeLogs.add(timeLog);
+            timeLog.setId(timeLogId);
+            mTimeLogs.postValue(timeLogs);
+        });
     }
 
     public LiveData<List<TimeLog>> filterTimeLogsBy(final Date date) {

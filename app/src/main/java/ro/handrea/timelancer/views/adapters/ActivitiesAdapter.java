@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ro.handrea.timelancer.R;
@@ -21,7 +22,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.Ac
     private List<Activity> mActivities;
 
     public void setData(List<Activity> data) {
-        this.mActivities = data;
+        this.mActivities = new ArrayList<>(data);
         notifyDataSetChanged();
     }
 

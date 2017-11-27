@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ro.handrea.timelancer.R;
@@ -21,7 +22,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     private List<Project> mProjects;
 
     public void setData(List<Project> data) {
-        this.mProjects = data;
+        this.mProjects = new ArrayList<>(data);
         notifyDataSetChanged();
     }
 

@@ -102,12 +102,7 @@ public class ActivitiesFragment extends FabAwareFragment implements ActivityCrea
 
     private void setAdaptersData() {
         LiveData<List<Activity>> activities = mViewModel.getActivities();
-        activities.observe(ActivitiesFragment.this, new Observer<List<Activity>>() {
-            @Override
-            public void onChanged(@Nullable List<Activity> activities) {
-                mActivitiesAdapter.setData(activities);
-            }
-        });
+        activities.observe(ActivitiesFragment.this, activities1 -> mActivitiesAdapter.setData(activities1));
     }
 
     @Override

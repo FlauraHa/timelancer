@@ -25,5 +25,5 @@ public interface ActivityDao {
     Activity getEntryFor(TimeLog timeLog);
 
     @Insert
-    void insert(Activity activity);
+    long insert(Activity activity);
 }
